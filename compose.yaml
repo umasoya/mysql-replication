@@ -1,0 +1,44 @@
+---
+version: '3'
+
+services:
+
+  master:
+    build:
+      context: ./docker/master
+      dockerfile: Dockerfile
+    container_name: master
+    volumes:
+      - master:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      TZ: 'Asia/Tokyo'
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 3m
+
+  slave:
+    build:
+      context: ./docker/slave
+      dockerfile: Dockerfile
+    container_name: slave
+    volumes:
+      - slave:/var/lib/mysql
+    ports:
+      - 3307:3307
+    environment:
+      TZ: 'Asia/Tokyo'
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 3m
+
+volumes:
+  master:
+  slave:
